@@ -27,10 +27,19 @@ public class Robot extends CommandRobot {
 
     final private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
-    /**
-     * This function sets up each controller to have the appropriate button mappings
-     */
-    private void configureButtonBindings() {
+    /** Set up the button bindings. */
+    @Override
+    public void configureButtonBindings() {
+    }
+
+    /** Send commands and data to Shuffleboard. */
+    @Override
+    public void populateDashboard() {
+    }
+
+    /** Set the default commands for each subsystem. */
+    @Override
+    public void setDefaultCommands() {
     }
 
     /**
