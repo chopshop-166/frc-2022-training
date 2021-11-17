@@ -21,11 +21,7 @@ import io.github.oblarg.oblog.Logger;
  */
 public class Robot extends CommandRobot {
 
-    private Command autonomousCommand;
-
     private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-
-    final private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     /** Set up the button bindings. */
     @Override
@@ -50,52 +46,11 @@ public class Robot extends CommandRobot {
     public void robotInit() {
         super.robotInit();
         Logger.configureLoggingAndConfig(this, false);
-        configureButtonBindings();
     }
 
     @Override
     public void robotPeriodic() {
         super.robotPeriodic();
         Logger.updateEntries();
-    }
-
-    /**
-     * This function is called once each time the robot enters Disabled mode.
-     */
-    @Override
-    public void disabledInit() {
-        super.disabledInit();
-        CommandScheduler.getInstance().cancelAll();
-    }
-
-    /**
-     * This autonomous runs the autonomous command selected by your
-     * {@link RobotContainer} class.
-     */
-    @Override
-    public void autonomousInit() {
-        autonomousCommand = autoChooser.getSelected();
-
-        // schedule the autonomous command (example)
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
-        }
-    }
-
-    @Override
-    public void teleopInit() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-    }
-
-    @Override
-    public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
     }
 }
