@@ -50,7 +50,7 @@ repositories {
 }
 
 chopshop {
-    version = "2022.1.1-alpha4"
+    version = "2022.1.1-alpha5"
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
@@ -89,7 +89,7 @@ sim {
 
 // Setting up my Jar File by adding the manifest so WPILib
 // knows where to look for our Robot Class.
-jar { chopshop.setupManifest(manifest, ROBOT_MAIN_CLASS) }
+chopshop.setupManifest(jar.manifest, ROBOT_MAIN_CLASS)
 
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     reports {
