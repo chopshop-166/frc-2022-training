@@ -4,12 +4,17 @@
 
 package frc.robot;
 
-import com.chopshop166.chopshoplib.commands.CommandRobot;
+import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.ExampleSubsystem;
+import com.chopshop166.chopshoplib.commands.CommandRobot;
+import com.chopshop166.chopshoplib.controls.ButtonXboxController;
+import com.chopshop166.chopshoplib.controls.ButtonXboxController.Direction;
+
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.maps.RobotMap;
+import frc.robot.subsystems.CounterSubsystem;
+import frc.robot.subsystems.Drive;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -21,11 +26,23 @@ import io.github.oblarg.oblog.Logger;
  */
 public class Robot extends CommandRobot {
 
-    private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+    private final ButtonXboxController controller = new ButtonXboxController(0);
+    private final CounterSubsystem counterA = new CounterSubsystem("A");
+    private final CounterSubsystem counterB = new CounterSubsystem("B");
+
+    private final RobotMap map = getMapForName("Francois", RobotMap.class, "frc.robot.maps");
+
+    private final Drive drive = new Drive(map.getDriveMap());
 
     /** Set up the button bindings. */
     @Override
     public void configureButtonBindings() {
+        controller.getButton(Button.kA).whenPressed(counterA.increment());
+        controller.getButton(Button.kB).whenPressed(parallel("Run stuff",counterA.incrementWhileRunning(), sequence("Wait then increment b", counterA.check(50), counterB.incrementWhileRunning()));
+        controller.getButton(Button.kX).whenPressed(counterA.print());
+        controller.getPovButton(Direction.Up).whenPressed(counterB.increment());
+        controller.getPovButton(Direction.Left).whenPressed(counterB.print());
+        controller.getPovButton(Direction.Down).whenPressed(counterB.decrement());
     }
 
     /** Send commands and data to Shuffleboard. */
@@ -36,6 +53,7 @@ public class Robot extends CommandRobot {
     /** Set the default commands for each subsystem. */
     @Override
     public void setDefaultCommands() {
+        drive.setDefaultCommand(drive.arcadeDrive(() -> controller.getTriggers(), () -> controller.getX(Hand.kLeft)));
     }
 
     /**
