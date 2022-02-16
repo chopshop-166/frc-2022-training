@@ -4,18 +4,13 @@
 
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
-
 import com.chopshop166.chopshoplib.commands.CommandRobot;
 import com.chopshop166.chopshoplib.controls.ButtonXboxController;
-import com.chopshop166.chopshoplib.controls.ButtonXboxController.Direction;
+import com.chopshop166.chopshoplib.controls.ButtonXboxController.POVDirection;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.maps.RobotMap;
 import frc.robot.subsystems.CounterSubsystem;
 import frc.robot.subsystems.Drive;
-import io.github.oblarg.oblog.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -37,12 +32,13 @@ public class Robot extends CommandRobot {
     /** Set up the button bindings. */
     @Override
     public void configureButtonBindings() {
-        controller.getButton(Button.kA).whenPressed(counterA.increment());
-        controller.getButton(Button.kB).whenPressed(parallel("Run stuff",counterA.incrementWhileRunning(), sequence("Wait then increment b", counterA.check(50), counterB.incrementWhileRunning()));
-        controller.getButton(Button.kX).whenPressed(counterA.print());
-        controller.getPovButton(Direction.Up).whenPressed(counterB.increment());
-        controller.getPovButton(Direction.Left).whenPressed(counterB.print());
-        controller.getPovButton(Direction.Down).whenPressed(counterB.decrement());
+        controller.a().whenPressed(counterA.increment());
+        controller.b().whenPressed(parallel("Run stuff", counterA.incrementWhileRunning(),
+                sequence("Wait then increment b", counterA.check(50), counterB.incrementWhileRunning())));
+        controller.x().whenPressed(counterA.print());
+        controller.getPovButton(POVDirection.UP).whenPressed(counterB.increment());
+        controller.getPovButton(POVDirection.LEFT).whenPressed(counterB.print());
+        controller.getPovButton(POVDirection.DOWN).whenPressed(counterB.decrement());
     }
 
     /** Send commands and data to Shuffleboard. */
@@ -53,22 +49,6 @@ public class Robot extends CommandRobot {
     /** Set the default commands for each subsystem. */
     @Override
     public void setDefaultCommands() {
-        drive.setDefaultCommand(drive.arcadeDrive(() -> controller.getTriggers(), () -> controller.getX(Hand.kLeft)));
-    }
-
-    /**
-     * This function is run when the robot is first started up and should be used
-     * for any initialization code.
-     */
-    @Override
-    public void robotInit() {
-        super.robotInit();
-        Logger.configureLoggingAndConfig(this, false);
-    }
-
-    @Override
-    public void robotPeriodic() {
-        super.robotPeriodic();
-        Logger.updateEntries();
+        drive.setDefaultCommand(drive.arcadeDrive(controller::getTriggers, controller::getLeftX));
     }
 }

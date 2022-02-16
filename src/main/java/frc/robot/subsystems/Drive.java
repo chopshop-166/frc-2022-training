@@ -7,11 +7,11 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.chopshop166.chopshoplib.commands.SmartSubsystemBase;
-import com.chopshop166.chopshoplib.outputs.SmartMotorController;
+import com.chopshop166.chopshoplib.maps.DifferentialDriveMap;
+import com.chopshop166.chopshoplib.motors.SmartMotorController;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.maps.RobotMap.DriveMap;
 
 public class Drive extends SmartSubsystemBase {
 
@@ -19,7 +19,7 @@ public class Drive extends SmartSubsystemBase {
   private final SmartMotorController right;
   private final DifferentialDrive driveTrain;
 
-  public Drive(final DriveMap map) {
+  public Drive(final DifferentialDriveMap map) {
     this.left = map.getLeft();
     this.right = map.getRight();
     driveTrain = new DifferentialDrive(left, right);
